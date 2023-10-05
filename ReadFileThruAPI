@@ -1,0 +1,28 @@
+import win32com.client
+import time
+import os
+
+# Constants
+LOG_FILE = 'changes_log.txt'
+
+# Connect to the open PowerPoint application
+ppt = win32com.client.Dispatch("PowerPoint.Application")
+
+# Get the active presentation
+presentation = ppt.ActivePresentation
+
+# Initially, let's just capture the slide count and slide titles
+previous_slide_count = len(presentation.Slides)
+previous_slide_titles = [slide.Shapes.Title.TextFrame.TextRange.Text for slide in presentation.Slides if slide.Shapes.HasTitle == -1]
+
+while True:
+    current_slide_count = len(presentation.Slides)
+    current_slide_titles = [slide.Shapes.Title.TextFrame.TextRange.Text for slide in presentation.Slides if slide.Shapes.HasTitle == -1]
+
+    if current_slide_count != previous_slide_count or current_slide_titles != previous_slide_titles:
+        with open(LOG_FILE, 'a') as log:
+            log.write(f"Presentation changed at {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        previous_slide_count = current_slide_count
+        previous_slide_titles = current_slide_titles
+
+    time.sleep(10)  # wait for 10 seconds before checking again
