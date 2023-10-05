@@ -1,0 +1,23 @@
+Dim WithEvents PPTEvent As Application
+Dim LogFilePath As String
+
+Private Sub Workbook_Open()
+    Set PPTEvent = Application
+    LogFilePath = "C:\path_to_directory\log.txt" ' <-- Update this to your desired path
+End Sub
+
+Private Sub PPTEvent_PresentationNewSlide(ByVal Sld As Slide)
+    Call LogChange("New slide added at position " & Sld.SlideIndex)
+End Sub
+
+Private Sub PPTEvent_SlideShowNextSlide(ByVal Wn As SlideShowWindow)
+    Call LogChange("Slide changed to slide number " & Wn.View.CurrentShowPosition)
+End Sub
+
+Sub LogChange(message As String)
+    Dim file As Integer
+    file = FreeFile
+    Open LogFilePath For Append As file
+    Write file, Now & " - " & message
+    Close file
+End Sub
