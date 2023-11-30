@@ -5,7 +5,7 @@ $mainStart = Get-Date
 
  
 
-# Start PowerPoint and time it
+# Start PowerPoint and time it, total time is listed
 $startPowerPointTime = Get-Date
 Start-Process "powerpnt.exe"
 Start-Sleep -Seconds 5
